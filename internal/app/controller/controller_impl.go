@@ -77,6 +77,7 @@ func (ctrl *controller) DownloadArquivo(c *gin.Context) {
 	defer file.Close()
 
 	c.File(path)
+	go ctrl.service.DeleteFile(path)
 }
 
 // ConvertArquivo godoc

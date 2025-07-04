@@ -9,5 +9,6 @@ import (
 type Service interface {
 	SaveFile(fileHeader *multipart.FileHeader) (*model.File, error)
 	DownloadFile(path string) (*os.File, error)
+	DeleteFile(path string) (bool, error)
 	ConvertMP3toOGG(path string) (string, error)
 }

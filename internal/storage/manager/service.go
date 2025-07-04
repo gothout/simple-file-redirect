@@ -50,16 +50,16 @@ func (s *service) SaveFile(fileHeader *multipart.FileHeader) (string, error) {
 
 }
 
-func (s *service) DeleteFile(filePath string) (string, error) {
+func (s *service) DeleteFile(filePath string) (bool, error) {
 	// Verifica se o arquivo existe
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		return "", fmt.Errorf("arquivo não encontrado: %s", filePath)
+		return false, fmt.Errorf("arquivo não encontrado: %s", filePath)
 	}
 
 	// Remove o arquivo
 	if err := os.Remove(filePath); err != nil {
-		return "", fmt.Errorf("erro ao deletar arquivo: %w", err)
+		return false, fmt.Errorf("erro ao deletar arquivo: %w", err)
 	}
 
-	return filePath, nil
+	return true, nil
 }

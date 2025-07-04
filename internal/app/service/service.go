@@ -66,7 +66,17 @@ func (s *service) ConvertMP3toOGG(path string) (string, error) {
 	}
 
 	// Deleta o original
-	_, _ = s.storageManager.DeleteFile(path)
+	deleted, err := s.DeleteFile(path)
+	if err != nil {
+		return "", err
+	}
+	if !deleted {
+		return "", err
+	}
 
 	return resultPath, nil
+}
+
+func (s *service) DeleteFile(path string) (bool, error) {
+	return s.storageManager.DeleteFile(path)
 }
