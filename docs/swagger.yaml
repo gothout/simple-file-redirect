@@ -1,0 +1,114 @@
+basePath: /
+info:
+  contact: {}
+  description: API para upload, download e conversão de arquivos mp3 para ogg
+  title: Simple File Redirect API
+  version: "1.0"
+paths:
+  /manager/v1/convert:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Realiza upload e conversão de um arquivo MP3 para OGG
+      parameters:
+      - description: Arquivo MP3 para conversão
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: 'Extensão de destino (ex: ogg)'
+        in: formData
+        name: convert
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Arquivo convertido com sucesso
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Erro de validação ou tipo de conversão não suportado
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Erro interno ao converter
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Conversão de arquivo MP3 para OGG
+      tags:
+      - Conversão
+  /manager/v1/download:
+    get:
+      description: Realiza o download de um arquivo salvo, baseado no path informado
+      parameters:
+      - description: Caminho completo do arquivo salvo
+        in: query
+        name: path
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: Arquivo enviado
+          schema:
+            type: file
+        "400":
+          description: Parâmetro ausente
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Arquivo não encontrado
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Download de arquivo
+      tags:
+      - Arquivos
+  /manager/v1/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Recebe um arquivo via multipart/form e salva no diretório de arquivos
+      parameters:
+      - description: Arquivo para upload
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Upload realizado com sucesso
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Erro de validação
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Erro ao salvar
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Upload de arquivo
+      tags:
+      - Arquivos
+swagger: "2.0"

@@ -30,7 +30,7 @@ func NewController(service service.Service) Controller {
 // @Success      200 {object} map[string]string "Upload realizado com sucesso"
 // @Failure      400 {object} map[string]string "Erro de validação"
 // @Failure      500 {object} map[string]string "Erro ao salvar"
-// @Router       /upload [post]
+// @Router       /manager/v1/upload [post]
 func (ctrl *controller) UploadArquivo(c *gin.Context) {
 	_, fileHeader, err := binding.BindUploadFileDTO(c)
 	if err != nil {
@@ -61,7 +61,7 @@ func (ctrl *controller) UploadArquivo(c *gin.Context) {
 // @Success      200 {file} file "Arquivo enviado"
 // @Failure      400 {object} map[string]string "Parâmetro ausente"
 // @Failure      404 {object} map[string]string "Arquivo não encontrado"
-// @Router       /download [get]
+// @Router       /manager/v1/download [get]
 func (ctrl *controller) DownloadArquivo(c *gin.Context) {
 	path := c.Query("path")
 	if path == "" {
@@ -90,7 +90,7 @@ func (ctrl *controller) DownloadArquivo(c *gin.Context) {
 // @Success      200 {object} map[string]string "Arquivo convertido com sucesso"
 // @Failure      400 {object} map[string]string "Erro de validação ou tipo de conversão não suportado"
 // @Failure      500 {object} map[string]string "Erro interno ao converter"
-// @Router       /convert [post]
+// @Router       /manager/v1/convert [post]
 func (ctrl *controller) ConvertArquivo(c *gin.Context) {
 	dtoConv, fileHeader, err := binding.BindUploadFileConvertDTO(c)
 	if err != nil {
