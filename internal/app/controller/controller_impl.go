@@ -102,9 +102,11 @@ func (ctrl *controller) DownloadArquivo(c *gin.Context) {
 
 // ListenArquivo godoc
 // @Summary      Ouvir arquivo
-// @Description  Retorna o arquivo de áudio para ser reproduzido diretamente, sem download
+// @Description  Retorna o arquivo de áudio para ser reproduzido diretamente, com possibilidade de remoção automática após execução
 // @Tags         Arquivos
-// @Produce      octet-stream
+// @Produce      audio/mpeg
+// @Produce      audio/ogg
+// @Produce      application/octet-stream
 // @Param        path query string true "Caminho completo do arquivo salvo"
 // @Param        token query string true "Token para acesso ao arquivo"
 // @Success      200 {file} file "Arquivo de áudio retornado"
@@ -118,16 +120,6 @@ func (ctrl *controller) ListenArquivo(c *gin.Context) {
 		return
 	}
 
-	normalized := filepath.ToSlash(path)
-	for strings.Contains(normalized, "//") {
-		normalized = strings.ReplaceAll(normalized, "//", "/")
-	}
-
-	if !strings.HasPrefix(normalized, "internal/storage/files/") {
-		c.JSON(http.StatusBadRequest, gin.H{"erro": "Caminho inválido: deve estar dentro de 'internal/storage/files/'"})
-		return
-	}
-
 	file, err := ctrl.service.DownloadFile(path)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"erro": "Arquivo não encontrado"})
@@ -135,17 +127,8 @@ func (ctrl *controller) ListenArquivo(c *gin.Context) {
 	}
 	defer file.Close()
 
-	ext := strings.ToLower(filepath.Ext(path))
-	switch ext {
-	case ".mp3":
-		c.Header("Content-Type", "audio/mpeg")
-	case ".ogg":
-		c.Header("Content-Type", "audio/ogg")
-	default:
-		c.Header("Content-Type", "application/octet-stream") // fallback
-	}
-
 	c.File(path)
+	go ctrl.service.DeleteFile(path)
 }
 
 // ConvertArquivo godoc
