@@ -82,11 +82,6 @@ const docTemplate = `{
         },
         "/manager/v1/download": {
             "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
                 "description": "Realiza o download de um arquivo salvo, baseado no path informado",
                 "produces": [
                     "application/octet-stream"

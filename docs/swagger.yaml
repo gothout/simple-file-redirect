@@ -80,8 +80,6 @@ paths:
             additionalProperties:
               type: string
             type: object
-      security:
-      - BearerAuth: []
       summary: Download de arquivo
       tags:
       - Arquivos

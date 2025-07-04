@@ -58,7 +58,6 @@ func (ctrl *controller) UploadArquivo(c *gin.Context) {
 // @Summary      Download de arquivo
 // @Description  Realiza o download de um arquivo salvo, baseado no path informado
 // @Tags         Arquivos
-// @Security     BearerAuth
 // @Produce      octet-stream
 // @Param        path query string true "Caminho completo do arquivo salvo"
 // @Param				 token query string true "Token para download do arquivo salvo"
