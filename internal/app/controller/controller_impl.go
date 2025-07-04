@@ -120,6 +120,17 @@ func (ctrl *controller) ListenArquivo(c *gin.Context) {
 		return
 	}
 
+	normalized := filepath.ToSlash(path)
+
+	for strings.Contains(normalized, "//") {
+		normalized = strings.ReplaceAll(normalized, "//", "/")
+	}
+
+	if !strings.HasPrefix(normalized, "internal/storage/files/") {
+		c.JSON(http.StatusBadRequest, gin.H{"erro": "Caminho inválido: deve estar dentro de 'internal/storage/files/'"})
+		return
+	}
+
 	file, err := ctrl.service.DownloadFile(path)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"erro": "Arquivo não encontrado"})
