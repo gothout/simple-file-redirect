@@ -128,7 +128,7 @@ func (ctrl *controller) ListenArquivo(c *gin.Context) {
 	defer file.Close()
 
 	c.File(path)
-	go ctrl.service.DeleteFile(path)
+	//go ctrl.service.DeleteFile(path)
 }
 
 // ConvertArquivo godoc
