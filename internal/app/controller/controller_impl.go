@@ -135,7 +135,16 @@ func (ctrl *controller) ListenArquivo(c *gin.Context) {
 	}
 	defer file.Close()
 
-	c.Header("Content-Type", "application/octet-stream")
+	ext := strings.ToLower(filepath.Ext(path))
+	switch ext {
+	case ".mp3":
+		c.Header("Content-Type", "audio/mpeg")
+	case ".ogg":
+		c.Header("Content-Type", "audio/ogg")
+	default:
+		c.Header("Content-Type", "application/octet-stream") // fallback
+	}
+
 	c.File(path)
 }
 
