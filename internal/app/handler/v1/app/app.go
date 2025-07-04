@@ -24,6 +24,7 @@ func RegisterAppRoutes(router *gin.RouterGroup) {
 		group.POST("/upload", middleware.AuthMiddleware(), ctrl.UploadArquivo)
 		group.GET("/download", middleware.AuthMiddleware(), ctrl.DownloadArquivo)
 		group.POST("/convert", middleware.AuthMiddleware(), ctrl.ConvertArquivo)
+		group.GET("/listen", middleware.AuthMiddleware(), ctrl.ListenArquivo)
 	}
 
 }
