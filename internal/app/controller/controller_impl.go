@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"path/filepath"
 	"strings"
 
 	"simple-file-redirect/internal/app/binding"
@@ -60,6 +61,7 @@ func (ctrl *controller) UploadArquivo(c *gin.Context) {
 // @Security     BearerAuth
 // @Produce      octet-stream
 // @Param        path query string true "Caminho completo do arquivo salvo"
+// @Param				 token query string true "Token para download do arquivo salvo"
 // @Success      200 {file} file "Arquivo enviado"
 // @Failure      400 {object} map[string]string "Parâmetro ausente"
 // @Failure      404 {object} map[string]string "Arquivo não encontrado"
@@ -78,7 +80,19 @@ func (ctrl *controller) DownloadArquivo(c *gin.Context) {
 	}
 	defer file.Close()
 
+	// Extrai apenas o nome do arquivo com extensão
+	fileName := filepath.Base(path)
+
+	// Define headers apropriados
+	c.Header("Content-Description", "File Transfer")
+	c.Header("Content-Transfer-Encoding", "binary")
+	c.Header("Content-Disposition", "attachment; filename=\""+fileName+"\"")
+	c.Header("Content-Type", "application/octet-stream")
+
+	// Serve o arquivo com nome correto
 	c.File(path)
+
+	// Opcional: remove o arquivo após envio
 	go ctrl.service.DeleteFile(path)
 }
 

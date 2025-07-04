@@ -102,6 +102,13 @@ const docTemplate = `{
                         "name": "path",
                         "in": "query",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Token para download do arquivo salvo",
+                        "name": "token",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {

@@ -10,17 +10,23 @@ import (
 
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// Obtém o header Authorization
-		authHeader := c.GetHeader("Authorization")
-		if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Authorization header missing or invalid"})
-			return
+		var token string
+
+		// 1. Verifica se há token na query string
+		queryToken := c.Query("token")
+		if queryToken != "" {
+			token = queryToken
+		} else {
+			// 2. Caso não tenha, verifica o Authorization header
+			authHeader := c.GetHeader("Authorization")
+			if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
+				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Authorization header or token query parameter required"})
+				return
+			}
+			token = strings.TrimPrefix(authHeader, "Bearer ")
 		}
 
-		// Extrai o token do header
-		token := strings.TrimPrefix(authHeader, "Bearer ")
-
-		// Compara com a variável de ambiente
+		// 3. Valida o token
 		expectedToken := env.GetTokenApp()
 		if expectedToken == "" {
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Server misconfigured: AUTH_TOKEN not set"})
@@ -32,7 +38,6 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		// Continua para o handler
 		c.Next()
 	}
 }

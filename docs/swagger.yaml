@@ -56,6 +56,11 @@ paths:
         name: path
         required: true
         type: string
+      - description: Token para download do arquivo salvo
+        in: query
+        name: token
+        required: true
+        type: string
       produces:
       - application/octet-stream
       responses:
