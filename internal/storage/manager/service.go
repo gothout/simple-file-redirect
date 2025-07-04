@@ -6,6 +6,8 @@ import (
 	"mime/multipart"
 	"os"
 	"path/filepath"
+
+	"github.com/google/uuid"
 )
 
 const dirPath = "./internal/storage/files"
@@ -30,8 +32,13 @@ func (s *service) SaveFile(fileHeader *multipart.FileHeader) (string, error) {
 	}
 	defer srcFile.Close()
 
-	// define o caminho completo onde o arquivo sera salvo
-	dstPath := filepath.Join(dirPath, fileHeader.Filename)
+	// gera um ID único
+	uniqueID := uuid.NewString()
+
+	// cria o novo nome com prefixo
+	finalName := uniqueID + "_" + fileHeader.Filename
+	dstPath := filepath.Join(dirPath, finalName)
+
 	// cria o arquivo de destino
 	dstFile, err := os.Create(dstPath)
 	if err != nil {
@@ -39,15 +46,14 @@ func (s *service) SaveFile(fileHeader *multipart.FileHeader) (string, error) {
 	}
 	defer dstFile.Close()
 
-	// copia o conteudo
+	// copia o conteúdo
 	_, err = io.Copy(dstFile, srcFile)
 	if err != nil {
 		return "", fmt.Errorf("erro ao salvar o arquivo: %v", err)
 	}
 
-	// Retorna o caminho salvo
+	// retorna o caminho completo do arquivo salvo
 	return dstPath, nil
-
 }
 
 func (s *service) DeleteFile(filePath string) (bool, error) {
