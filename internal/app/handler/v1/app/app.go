@@ -3,6 +3,7 @@ package app
 import (
 	"simple-file-redirect/internal/app/controller"
 	"simple-file-redirect/internal/app/service"
+	"simple-file-redirect/internal/middleware"
 	"simple-file-redirect/internal/storage/converter"
 	"simple-file-redirect/internal/storage/manager"
 
@@ -20,9 +21,9 @@ func RegisterAppRoutes(router *gin.RouterGroup) {
 	ctrl := controller.NewController(svc)
 	group := router.Group("/")
 	{
-		group.POST("/upload", ctrl.UploadArquivo)
-		group.GET("/download", ctrl.DownloadArquivo)
-		group.POST("/convert", ctrl.ConvertArquivo)
+		group.POST("/upload", middleware.AuthMiddleware(), ctrl.UploadArquivo)
+		group.GET("/download", middleware.AuthMiddleware(), ctrl.DownloadArquivo)
+		group.POST("/convert", middleware.AuthMiddleware(), ctrl.ConvertArquivo)
 	}
 
 }

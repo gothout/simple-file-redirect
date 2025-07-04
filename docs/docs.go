@@ -17,6 +17,11 @@ const docTemplate = `{
     "paths": {
         "/manager/v1/convert": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Realiza upload e conversão de um arquivo MP3 para OGG",
                 "consumes": [
                     "multipart/form-data"
@@ -77,6 +82,11 @@ const docTemplate = `{
         },
         "/manager/v1/download": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Realiza o download de um arquivo salvo, baseado no path informado",
                 "produces": [
                     "application/octet-stream"
@@ -124,6 +134,11 @@ const docTemplate = `{
         },
         "/manager/v1/upload": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Recebe um arquivo via multipart/form e salva no diretório de arquivos",
                 "consumes": [
                     "multipart/form-data"
@@ -174,6 +189,14 @@ const docTemplate = `{
                     }
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "description": "Forneça o token no formato: Bearer \u003ctoken\u003e",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

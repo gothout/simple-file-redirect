@@ -24,6 +24,7 @@ func NewController(service service.Service) Controller {
 // @Summary      Upload de arquivo
 // @Description  Recebe um arquivo via multipart/form e salva no diretório de arquivos
 // @Tags         Arquivos
+// @Security     BearerAuth
 // @Accept       multipart/form-data
 // @Produce      json
 // @Param        file formData file true "Arquivo para upload"
@@ -56,6 +57,7 @@ func (ctrl *controller) UploadArquivo(c *gin.Context) {
 // @Summary      Download de arquivo
 // @Description  Realiza o download de um arquivo salvo, baseado no path informado
 // @Tags         Arquivos
+// @Security     BearerAuth
 // @Produce      octet-stream
 // @Param        path query string true "Caminho completo do arquivo salvo"
 // @Success      200 {file} file "Arquivo enviado"
@@ -84,6 +86,7 @@ func (ctrl *controller) DownloadArquivo(c *gin.Context) {
 // @Summary      Conversão de arquivo MP3 para OGG
 // @Description  Realiza upload e conversão de um arquivo MP3 para OGG
 // @Tags         Conversão
+// @Security     BearerAuth
 // @Accept       multipart/form-data
 // @Produce      json
 // @Param        file formData file true "Arquivo MP3 para conversão"

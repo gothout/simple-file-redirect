@@ -42,6 +42,8 @@ paths:
             additionalProperties:
               type: string
             type: object
+      security:
+      - BearerAuth: []
       summary: Conversão de arquivo MP3 para OGG
       tags:
       - Conversão
@@ -73,6 +75,8 @@ paths:
             additionalProperties:
               type: string
             type: object
+      security:
+      - BearerAuth: []
       summary: Download de arquivo
       tags:
       - Arquivos
@@ -108,7 +112,15 @@ paths:
             additionalProperties:
               type: string
             type: object
+      security:
+      - BearerAuth: []
       summary: Upload de arquivo
       tags:
       - Arquivos
+securityDefinitions:
+  BearerAuth:
+    description: 'Forneça o token no formato: Bearer <token>'
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

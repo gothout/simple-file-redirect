@@ -3,6 +3,12 @@
 // @description API para upload, download e conversão de arquivos mp3 para ogg
 // @BasePath /
 
+// 🔐 Definição do Bearer Token
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Forneça o token no formato: Bearer <token>
+
 package main
 
 import (
