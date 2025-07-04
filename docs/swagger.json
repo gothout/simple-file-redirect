@@ -127,6 +127,60 @@
                 }
             }
         },
+        "/manager/v1/listen": {
+            "get": {
+                "description": "Retorna o arquivo de áudio para ser reproduzido diretamente, sem download",
+                "produces": [
+                    "application/octet-stream"
+                ],
+                "tags": [
+                    "Arquivos"
+                ],
+                "summary": "Ouvir arquivo",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Caminho completo do arquivo salvo",
+                        "name": "path",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Token para acesso ao arquivo",
+                        "name": "token",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Arquivo de áudio retornado",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "400": {
+                        "description": "Parâmetro ausente ou inválido",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Arquivo não encontrado",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/manager/v1/upload": {
             "post": {
                 "security": [

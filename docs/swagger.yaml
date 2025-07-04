@@ -83,6 +83,43 @@ paths:
       summary: Download de arquivo
       tags:
       - Arquivos
+  /manager/v1/listen:
+    get:
+      description: Retorna o arquivo de áudio para ser reproduzido diretamente, sem
+        download
+      parameters:
+      - description: Caminho completo do arquivo salvo
+        in: query
+        name: path
+        required: true
+        type: string
+      - description: Token para acesso ao arquivo
+        in: query
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: Arquivo de áudio retornado
+          schema:
+            type: file
+        "400":
+          description: Parâmetro ausente ou inválido
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Arquivo não encontrado
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Ouvir arquivo
+      tags:
+      - Arquivos
   /manager/v1/upload:
     post:
       consumes:
