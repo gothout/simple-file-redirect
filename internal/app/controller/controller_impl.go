@@ -72,6 +72,17 @@ func (ctrl *controller) DownloadArquivo(c *gin.Context) {
 		return
 	}
 
+	normalized := filepath.ToSlash(path)
+
+	for strings.Contains(normalized, "//") {
+		normalized = strings.ReplaceAll(normalized, "//", "/")
+	}
+
+	if !strings.HasPrefix(normalized, "internal/storage/files/") {
+		c.JSON(http.StatusBadRequest, gin.H{"erro": "Caminho inválido: deve estar dentro de 'internal/storage/files/'"})
+		return
+	}
+
 	file, err := ctrl.service.DownloadFile(path)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"erro": "Arquivo não encontrado"})
@@ -79,19 +90,13 @@ func (ctrl *controller) DownloadArquivo(c *gin.Context) {
 	}
 	defer file.Close()
 
-	// Extrai apenas o nome do arquivo com extensão
-	fileName := filepath.Base(path)
-
-	// Define headers apropriados
 	c.Header("Content-Description", "File Transfer")
 	c.Header("Content-Transfer-Encoding", "binary")
-	c.Header("Content-Disposition", "attachment; filename=\""+fileName+"\"")
+	c.Header("Content-Disposition", "attachment; filename=\""+filepath.Base(path)+"\"")
 	c.Header("Content-Type", "application/octet-stream")
 
-	// Serve o arquivo com nome correto
 	c.File(path)
 
-	// Opcional: remove o arquivo após envio
 	go ctrl.service.DeleteFile(path)
 }
 
