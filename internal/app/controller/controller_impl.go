@@ -100,6 +100,45 @@ func (ctrl *controller) DownloadArquivo(c *gin.Context) {
 	go ctrl.service.DeleteFile(path)
 }
 
+// ListenArquivo godoc
+// @Summary      Ouvir arquivo
+// @Description  Retorna o arquivo de áudio para ser reproduzido diretamente, sem download
+// @Tags         Arquivos
+// @Produce      octet-stream
+// @Param        path query string true "Caminho completo do arquivo salvo"
+// @Param        token query string true "Token para acesso ao arquivo"
+// @Success      200 {file} file "Arquivo de áudio retornado"
+// @Failure      400 {object} map[string]string "Parâmetro ausente ou inválido"
+// @Failure      404 {object} map[string]string "Arquivo não encontrado"
+// @Router       /manager/v1/listen [get]
+func (ctrl *controller) ListenArquivo(c *gin.Context) {
+	path := c.Query("path")
+	if path == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"erro": "Parâmetro 'path' é obrigatório"})
+		return
+	}
+
+	normalized := filepath.ToSlash(path)
+	for strings.Contains(normalized, "//") {
+		normalized = strings.ReplaceAll(normalized, "//", "/")
+	}
+
+	if !strings.HasPrefix(normalized, "internal/storage/files/") {
+		c.JSON(http.StatusBadRequest, gin.H{"erro": "Caminho inválido: deve estar dentro de 'internal/storage/files/'"})
+		return
+	}
+
+	file, err := ctrl.service.DownloadFile(path)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"erro": "Arquivo não encontrado"})
+		return
+	}
+	defer file.Close()
+
+	c.Header("Content-Type", "application/octet-stream")
+	c.File(path)
+}
+
 // ConvertArquivo godoc
 // @Summary      Conversão de arquivo MP3 para OGG
 // @Description  Realiza upload e conversão de um arquivo MP3 para OGG
